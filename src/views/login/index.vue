@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <!-- el-form 绑定model属性/rules规则 -->
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -7,11 +8,12 @@
           <img src="@/assets/common/login-logo.png" alt="">
         </h3>
       </div>
-
+      <!-- 设置prop属性 -->
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
+        <!-- v-model绑定属性 -->
         <el-input
           ref="username"
           v-model="loginForm.username"
@@ -60,6 +62,8 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
+      // 校验成功 callback()
+      // 校验失败 callback(new Error("错误信息"))
       if (!validUsername(value)) {
         callback(new Error('Please enter the correct user name'))
       } else {
@@ -79,6 +83,8 @@ export default {
         password: '111111'
       },
       loginRules: {
+        // trigger 校验的触发方式 blur/change
+        // 自定义函数  validator
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
