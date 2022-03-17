@@ -2,7 +2,7 @@ import axios from 'axios'
 const service = axios.create() // 通过create创建了一个新的axios实例
 service.interceptors.request.use() // 请求拦截器 请求拦截器主要处理 token的统一注入问题
 service.interceptors.response.use() // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
-export default serviece
+export default service
 // import axios from 'axios'
 // import { MessageBox, Message } from 'element-ui'
 // import store from '@/store'
