@@ -1,10 +1,27 @@
+import { login } from '@/api/user'
 import axios from 'axios'
+import { Message } from 'element-ui'
 const service = axios.create({ // 当执行 npm run dev => .evn.development => /api => 跨域代理
   baseURL: process.env.VUE_APP_BASE_API, // / npm run dev => /api npm run build=> /prod-api
   timeout: 5000 // 设置超时时间
 }) // 通过create创建了一个新的axios实例
 service.interceptors.request.use() // 请求拦截器 请求拦截器主要处理 token的统一注入问题
-service.interceptors.response.use() // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
+// service.interceptors.response.use(function(response) {}, function (error) {}) // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
+service.interceptors.response.use(response => {
+// axios 默认加了一层 data // response 响应
+  const { success, message, data } = response.data // 要根据 success 的成功与否决定下面的操作
+  if (success) {
+    return data
+  } else {
+    // 业务已经错误了 还能进 then ? 不能 ！应该进 catch
+    Message.error(message) // 提示错误消息
+    return Promise.reject(new Error(message))
+  }
+}, error => {
+  Message.error(error.message) // 提示错误信息
+  return Promise.reject(error) // 返回执行错误，让当前的执行链跳出成功 直接进入 catch
+  //   login().then().catch()
+}) // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
 export default service
 // import axios from 'axios'
 // import { MessageBox, Message } from 'element-ui'
