@@ -25,6 +25,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  store,
+  store, // 加入store 对象
   render: h => h(App)
 })

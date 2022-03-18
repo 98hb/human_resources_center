@@ -1,5 +1,5 @@
-// 从缓存中读取token,将token写入缓存,删除token
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken } from '@/utils/auth' // 从缓存中读取token,将token写入缓存,删除token
+import { login } from '@/api/user' // 引入登陆接口
 // 状态
 const state = {
   token: getToken // 设置token 为共享状态,初始化vuex的时候，就先从缓存中读取
@@ -16,7 +16,16 @@ const mutations = { // 同步函数
     removeToken() // 同步到缓存
   }
 }
-const actions = {}
+const actions = {
+  async login(context, data) { // 此处为 actions ,data 为接口所要的参数
+    const result = await login(data) // 此处为调用 login api 接口 result 为返回数据
+    // axios 默认加了一层 data
+    if (result.data.success) { // 如果为 true 表示登陆成功
+      context.commit('setToken', result.data.data) // ontext.commit('setToken ')的意思是触发mutations下的setToken函数
+    // dispatch方法是官方固定触发actions下函数的方法
+    } // 1 调用接口 | 2 成功后给 mutations | 3 mutations同步给缓存 | 4 重新登陆从 缓存中读取值
+  }
+}
 export default {
   namespaced: true,
   state: {},

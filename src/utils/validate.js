@@ -6,6 +6,7 @@
  * @param {string} path
  * @returns {Boolean}
  */
+// validate 页面验证
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
