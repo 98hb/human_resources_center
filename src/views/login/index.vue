@@ -58,7 +58,7 @@
 
 <script>
 import { verifyMobile } from '@/utils/validate'
-
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data() {
@@ -108,6 +108,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['user/login']), // 引入方法
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -119,20 +120,23 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+      this.$refs.loginForm.validate(async isOK => { // ref 可以获取一个元素的 dom 对象
+        if (isOK) { // ref 作用到组件时候可以获取该组件的实例 this
+          try {
+            this.loading = true
+            // 只有校验通过了，我们才去调用 actions
+            await this['user/login'](this.loginForm) // 调用异步函数
+            // 应该登录成功之后
+            // async 标记的函数实际上是 一个 promise 对象
+            // await 下面的代码 都是成功后执行的代码
+            this.$router.push('/')
+          } catch (error) {
+            console.log(error)
+          } finally { // both 执行 关闭 loading 转圈状态
             this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+          }
         }
-      })
+      }) // 表单的手动校验
     }
   }
 }

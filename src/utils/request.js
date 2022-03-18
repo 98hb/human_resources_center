@@ -1,4 +1,3 @@
-import { login } from '@/api/user'
 import axios from 'axios'
 import { Message } from 'element-ui'
 const service = axios.create({ // 当执行 npm run dev => .evn.development => /api => 跨域代理
