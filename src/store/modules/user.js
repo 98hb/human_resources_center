@@ -2,7 +2,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth' // 从缓存中�
 import { login } from '@/api/user' // 引入登陆接口
 // 状态
 const state = {
-  token: getToken // 设置token 为共享状态,初始化vuex的时候，就先从缓存中读取
+  token: getToken() // 设置token 为共享状态,初始化vuex的时候，就先从缓存中读取
 }
 const mutations = { // 同步函数
   // 两个参数 第一个是状态，第二个是载荷 state,pryload
