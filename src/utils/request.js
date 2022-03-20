@@ -15,8 +15,8 @@ service.interceptors.request.use(config => {
 }, error => {
   return Promise.reject(error)
 }) // 请求拦截器 请求拦截器主要处理 token的统一注入问题
-// service.interceptors.response.use(function(response) {}, function (error) {}) // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
-service.interceptors.response.use(response => {
+// service.interceptors.response.use(function(response) {}, function (error) {}) // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据解构问题
+service.interceptors.response.use(response => { // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据解构问题
 // axios 默认加了一层 data // response 响应
   const { success, message, data } = response.data // 要根据 success 的成功与否决定下面的操作
   if (success) {
