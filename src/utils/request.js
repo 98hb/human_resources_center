@@ -1,10 +1,20 @@
+import store from '@/store'
 import axios from 'axios'
 import { Message } from 'element-ui'
 const service = axios.create({ // 当执行 npm run dev => .evn.development => /api => 跨域代理
   baseURL: process.env.VUE_APP_BASE_API, // / npm run dev => /api npm run build=> /prod-api
   timeout: 5000 // 设置超时时间
 }) // 通过create创建了一个新的axios实例
-service.interceptors.request.use() // 请求拦截器 请求拦截器主要处理 token的统一注入问题
+service.interceptors.request.use(config => {
+  // config 是请求的配置信息
+  // token的统一注入问题
+  if (store.getters.token) {
+    config.headers['Authorization'] = `Bearer ${store.getters.token}`
+  }
+  return config // 必须要返回的
+}, error => {
+  return Promise.reject(error)
+}) // 请求拦截器 请求拦截器主要处理 token的统一注入问题
 // service.interceptors.response.use(function(response) {}, function (error) {}) // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
 service.interceptors.response.use(response => {
 // axios 默认加了一层 data // response 响应
