@@ -16,3 +16,4 @@ export const imagerror = {
 }
 // <img v-imagerror="img" />
 // data () { return { img: 'a.png' } }
+// export default 1
