@@ -1,6 +1,6 @@
 // action => mutations => state => getters
 import { getToken, setToken, removeToken } from '@/utils/auth' // 从缓存中读取token,将token写入缓存,删除token
-import { login, getUserInfo } from '@/api/user' // 引入登陆接口
+import { login, getUserInfo, getUserDetailById } from '@/api/user' // 引入登陆接口
 // 状态
 const state = {
   token: getToken(), // 设置token 为共享状态,初始化vuex的时候，就先从缓存中读取
@@ -36,7 +36,8 @@ const actions = {
   },
   async getUserInfo(context) { // 封装 getUserInfo action
     const result = await getUserInfo() // 调用 getUserInfo 接口 接收返回 的 data
-    context.commit('setUserInfo', result) // 提交到 mutations
+    const baseInfo = await getUserDetailById(result.userId) // 获取用户的详情 用户的详情数据
+    context.commit('setUserInfo', { ...result, ...baseInfo }) // 提交到 mutations
     return result // 这里为什么要 return 呢 这里是给我们后期做权限的时候 留下的伏笔
   }
 }
