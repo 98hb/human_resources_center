@@ -1,5 +1,5 @@
 // action => mutations => state => getters
-import { getToken, setToken, removeToken } from '@/utils/auth' // 从缓存中读取token,将token写入缓存,删除token
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth' // 从缓存中读取token,将token写入缓存,删除token
 import { login, getUserInfo, getUserDetailById } from '@/api/user' // 引入登陆接口
 // 状态
 const state = {
@@ -33,6 +33,8 @@ const actions = {
     const result = await login(data) // 此处为调用 login api 接口 result 为返回数据 // 拿到 token
     context.commit('setToken', result) // ontext.commit('setToken ')的意思是触发mutations下的setToken函数 // 设置 token
     // 1 调用接口 | 2 成功后给 mutations | 3 mutations同步给缓存 | 4 重新登陆从 缓存中读取值
+    // 拿到 token 说明成功
+    setTimeStamp() // 设置当前的时间戳
   },
   async getUserInfo(context) { // 封装 getUserInfo action
     const result = await getUserInfo() // 调用 getUserInfo 接口 接收返回 的 data
