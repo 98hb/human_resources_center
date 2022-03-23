@@ -39,8 +39,17 @@ service.interceptors.response.use(response => { // 响应拦截器 响应拦截�
     return Promise.reject(new Error(message))
   }
 }, error => {
-  Message.error(error.message) // 提示错误信息
-  return Promise.reject(error) // 返回执行错误，让当前的执行链跳出成功 直接进入 catch
+  // error 信息里面 response 的对象
+  if (error.response && error.response.data && error.response.data.code === 10002) {
+    // 当等于 10002 的时候，表示后端告诉我 token 超时了
+    store.dispatch('user/logout') // 登出 action
+    router.push('/login')
+    // return Promise.reject(error)
+  } else {
+    Message.error(error.message) // 提示错误信息
+    // return Promise.reject(error) // 返回执行错误，让当前的执行链跳出成功 直接进入 catch
+  }
+  return Promise.reject(error)
   //   login().then().catch()
 }) // 响应拦截器 响应拦截器主要处理 返回的数据异常 和数据结构问题
 // 是否超时
