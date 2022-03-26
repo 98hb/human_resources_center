@@ -63,7 +63,7 @@ export const constantRoutes = [ // 静态路由
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: 'Dashboard/首页', icon: 'dashboard' }
     }]
   },
 
