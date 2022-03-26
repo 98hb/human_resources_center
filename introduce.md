@@ -1,5 +1,9 @@
 ## 业务模块页面的快速搭建
 
+![image-20220324082821044](C:\Users\liugu\AppData\Roaming\Typora\typora-user-images\image-20220324082821044.png)
+
+![image-20220324082759968](C:\Users\liugu\AppData\Roaming\Typora\typora-user-images\image-20220324082759968.png)
+
 ### 新建模块的页面和路由文件
 
 
