@@ -18,8 +18,8 @@
             <!-- 下拉选项 -->
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>添加子部门</el-dropdown-item>
-              <el-dropdown-item>编辑部门</el-dropdown-item>
-              <el-dropdown-item>删除部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot">编辑部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot">删除部门</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -43,6 +43,10 @@ export default {
     treeNode: {
       required: true,
       type: Object
+    },
+    isRoot: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -76,7 +80,6 @@ export default {
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
-<style lang='less' scoped>
-//@import url(); 引入公共css类
+<style scoped>
 
 </style>
