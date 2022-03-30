@@ -31,7 +31,7 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-
+import { delDepartments, departments } from '@/api/departments'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -84,7 +84,15 @@ export default {
         // 编辑部门
       } else {
         // 删除部门
-        alert('删除')
+        // alert('删除')
+        this.$confirm('您确定要删除该部门吗').then(() => {
+          // alert('用户点击了删除')
+          return delDepartments(this.treeNode.id)
+        }).then(() => {
+          // 只需要等待成功的时候，调用接口删除了，后端数据变化了，但是前端没变 重新获取
+          this.$emit('delDepts') // 触发自定义事件
+          this.$message.success('删除部门成功')
+        })
       }
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发

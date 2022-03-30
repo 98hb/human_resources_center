@@ -11,7 +11,7 @@
           <!-- 传入插槽内容且循环遍历节点 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据 data 每个节点的数据对象 -->
           <!-- data, node 要 data -->
-          <tree-tools slot-scope="{ data }" :tree-node="data" />
+          <tree-tools slot-scope="{ data }" :tree-node="data" @delDepts="getDepartments" />
         </el-tree>
         <!-- /el-tree -->
       </el-card>
