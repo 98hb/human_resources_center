@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <!-- 放置弹层组件 -->
-  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+  <el-dialog :title="showTitle" :visible="showDialog" @close="btnCancel">
     <!-- 表单数据 label-width 设置标题的宽度 -->
     <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
@@ -96,7 +96,11 @@ export default {
     }
   },
   // 监听属性 类似于data概念
-  computed: {},
+  computed: {
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增子部门'
+    }
+  },
   // 监控data中的数据变化
   watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
@@ -141,9 +145,16 @@ export default {
       })
     },
     btnCancel() {
+      // 重置数据，因为 resetFields 只能重置表单上的数据，非表单上的比如 编辑中的 id 不能重置
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       // 关闭弹层
       this.$emit('update:showDialog', false)
-      // 清除之前的校验
+      // 清除之前的校验，可以重置数据，只能重置定义在 data 中的数据
       this.$refs.deptForm.resetFields()
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
