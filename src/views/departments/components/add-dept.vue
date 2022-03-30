@@ -57,6 +57,7 @@ export default {
       // 有相同的不能过去(统计部门不能有重复的名字)
       // 不相同就可以过去
       const { depts } = await getDepartments() // 去找统计部门下，有没有和 value 相同的数据 // 找到所有同级部门的子部门
+      //   debugger
       const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value) // 如果 isRepeat 为 true 表示找到一样的名字
       isRepeat ? callback(new Error(`同级别部门下已经存在这个${value}的部门了`)) : callback() // 有返回什么 没有返回什么
     }

@@ -49,7 +49,7 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       // export function tranListToTreeData(list, rootValue) {}
       this.departs = tranListToTreeData(result.depts, '') // 需要将其转化成树形结构
       console.log(result)
