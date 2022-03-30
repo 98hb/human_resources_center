@@ -18,15 +18,19 @@
       <!-- /头部 -->
       <!-- /组织架构内容 -->
     </div>
+    <!-- 放置新增弹层组件 -->
+    <add-dept />
+    <!-- /放置新增弹层组件 -->
   </div>
 </template>
 
 <script>
 import TreeTools from './components/tree-tools.vue'
+import AddDept from './components/add-dept.vue'
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
 export default {
-  components: { TreeTools },
+  components: { TreeTools, AddDept },
   data() {
     return {
       company: { }, // 头部的数据结构

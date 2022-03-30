@@ -18,3 +18,13 @@ export function delDepartments(id) {
     // delete 删除业务，post 新增业务，put 修改业务，get 获取业务
   })
 }
+/**
+ * 新增部门
+ */
+export function addDepartments(data) {
+  return request({
+    url: '/company/department', // 接口满足 restful 接口规范
+    method: 'post', // 接口满足 restful 接口规范
+    data
+  })
+}
