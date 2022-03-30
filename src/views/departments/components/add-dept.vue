@@ -3,7 +3,7 @@
   <!-- 放置弹层组件 -->
   <el-dialog title="新增部门" :visible="showDialog">
     <!-- 表单数据 label-width 设置标题的宽度 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="formData.name" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -25,7 +25,7 @@
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
         <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary">确定</el-button>
+        <el-button size="small" type="primary" @click="btnOK">确定</el-button>
       </el-col>
     </el-row>
     <!-- /确定和消息 -->
@@ -36,7 +36,7 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getEmployessSimple } from '@/api/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
@@ -118,6 +118,18 @@ export default {
   methods: {
     async getEmployessSimple() {
       this.peoples = await getEmployessSimple()
+    },
+    btnOK() {
+      // 手动校验表单
+      this.$refs.deptForm.validate(async isOK => {
+        if (isOK) {
+          // 表单校验通过
+          // 这里我们将 ID 设成了我的 pid
+          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          // 告诉父组件
+          this.$emit('addDepts') // 触发一个自定义事件
+        }
+      })
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
