@@ -36,7 +36,7 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-import { getDepartments, addDepartments, getDepartDetail } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail, updateDepartments } from '@/api/departments'
 import { getEmployessSimple } from '@/api/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
@@ -131,9 +131,14 @@ export default {
       // 手动校验表单
       this.$refs.deptForm.validate(async isOK => {
         if (isOK) {
+          if (this.formData.id) { // 有 id 调用编辑接口
+            // 编辑
+            await updateDepartments(this.formData)
+          } else { // 没有 id 调用新增接口
+            // 这里我们将 ID 设成了我的 pid
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
           // 表单校验通过
-          // 这里我们将 ID 设成了我的 pid
-          await addDepartments({ ...this.formData, pid: this.treeNode.id })
           // 告诉父组件
           this.$emit('addDepts') // 触发一个自定义事件
           // 此时应该去修改 showDialog 值
