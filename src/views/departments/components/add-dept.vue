@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <!-- 放置弹层组件 -->
-  <el-dialog title="新增部门" :visible="showDialog">
+  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
     <!-- 表单数据 label-width 设置标题的宽度 -->
     <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
@@ -24,7 +24,7 @@
     <!-- 确定和消息 -->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button size="small">取消</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
         <el-button size="small" type="primary" @click="btnOK">确定</el-button>
       </el-col>
     </el-row>
@@ -132,8 +132,15 @@ export default {
           // update: props 名称
           // this.$emit('changeDialog', false)
           this.$emit('update:showDialog', false)
+          // 关闭 dialog 的时候会触发 el-dialog的 close 事件，所以这里不需要再单独重置数据了
         }
       })
+    },
+    btnCancel() {
+      // 关闭弹层
+      this.$emit('update:showDialog', false)
+      // 清除之前的校验
+      this.$refs.deptForm.resetFields()
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
