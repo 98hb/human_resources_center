@@ -11,7 +11,10 @@
         <el-input v-model="formData.code" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="manager">
-        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" />
+        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @focus="getEmployessSimple">
+          <!-- 需要循环生成选项，这里做一下简单的处理，显示的是用户名，存的也是用户名 -->
+          <el-option v-for="item in peoples" :key="item.id" :label="item.username" :value="item.username" />
+        </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
         <el-input v-model="formData.introduce" style="width:80%" placeholder="1-300个字符" type="textarea" :rows="3" />
@@ -34,6 +37,7 @@
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
 import { getDepartments } from '@/api/departments'
+import { getEmployessSimple } from '@/api/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -87,7 +91,8 @@ export default {
         manager: [{ required: true, message: '部门负责人不能为空', trigger: 'blur' }],
         introduce: [{ required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { min: 1, max: 300, message: '部门介绍长度为1-300个字符', trigger: 'blur' }]
-      }
+      },
+      peoples: []
     }
   },
   // 监听属性 类似于data概念
@@ -111,7 +116,9 @@ export default {
   activated() {},
   // 方法集合
   methods: {
-
+    async getEmployessSimple() {
+      this.peoples = await getEmployessSimple()
+    }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
