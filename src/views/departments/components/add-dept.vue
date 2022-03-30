@@ -36,7 +36,7 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-import { getDepartments, addDepartments } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail } from '@/api/departments'
 import { getEmployessSimple } from '@/api/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
@@ -118,6 +118,10 @@ export default {
   methods: {
     async getEmployessSimple() {
       this.peoples = await getEmployessSimple()
+    },
+    // 获取详情方法
+    async getDepartDetail(id) {
+      this.formData = await getDepartDetail(id) // 因为我们是父组件调用子组件的方法，先设置了 node 数据，直接调用方法。props 传值是异步的
     },
     btnOK() {
       // 手动校验表单

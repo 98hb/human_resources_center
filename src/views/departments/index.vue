@@ -20,7 +20,7 @@
     </div>
     <!-- 放置新增弹层组件 -->
     <!-- <add-dept :show-dialog="showDialog" :tree-node="node" @changeDialog="test" @addDepts="getDepartments" /> -->
-    <add-dept :show-dialog.sync="showDialog" :tree-node="node" @changeDialog="test" @addDepts="getDepartments" />
+    <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @changeDialog="test" @addDepts="getDepartments" />
     <!-- /放置新增弹层组件 -->
   </div>
 </template>
@@ -66,6 +66,10 @@ export default {
     },
     editDepts(node) {
       this.showDialog = true // 弹出层
+      this.node = node
+      // 应该在这里调用获取部门详情的方法
+      // console.log(this.$refs.addDept)
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }

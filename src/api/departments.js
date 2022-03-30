@@ -12,7 +12,7 @@ export function getDepartments() {
  */
 export function delDepartments(id) {
   return request({
-    url: `/company/department${id}`,
+    url: `/company/department/${id}`,
     method: 'delete' // 接口满足 restful 接口规范
     // 同样的地址_不同的方法_执行不同的业务
     // delete 删除业务，post 新增业务，put 修改业务，get 获取业务
@@ -26,5 +26,13 @@ export function addDepartments(data) {
     url: '/company/department', // 接口满足 restful 接口规范
     method: 'post', // 接口满足 restful 接口规范
     data
+  })
+}
+/**
+ * 获取某个部门的详情
+ */
+export function getDepartDetail(id) {
+  return request({
+    url: `/company/department/${id}`
   })
 }
