@@ -60,14 +60,35 @@ export default {
       // value 是部门名称，要去和统计部门下的部门去比较，有没有相同的，
       // 有相同的不能过去(统计部门不能有重复的名字)
       // 不相同就可以过去
-      const { depts } = await getDepartments() // 去找统计部门下，有没有和 value 相同的数据 // 找到所有同级部门的子部门
+      const { depts } = await getDepartments() // 去找同级部门下，有没有和 value 相同的数据 // 找到所有同级部门的子部门
       //   debugger
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value) // 如果 isRepeat 为 true 表示找到一样的名字
+      let isRepeat = false
+      if (this.formData.id) {
+        // 有 id 就是编辑模式
+        // 编辑的数据在数据库里有 !!! 同级部门下，我的名字不能和其他的同级部门的名字进行重复
+        // 首先要找到我的同级部门 this.formData.id 就是我当前的 id，我的 pid 是 this.formData.pid
+        // depts.filter(item => item.pid === this.formData.pid && item.id !== this.formData.id)
+        isRepeat = depts.filter(item => item.pid === this.treeNode.pid && item.id !== this.treeNode.id).some(item => item.name === value)
+        // item.pid === this.treeNode.pid 找到所有和我同级的部门
+        // item.id !== this.treeNode.id 找同级部门下除了我之外的所有部门
+        // some(item => item.name === value) 找有没有和我名字相同的人
+      } else {
+        // 没有 id 就是新增模式
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value) // 如果 isRepeat 为 true 表示找到一样的名字
+      }
       isRepeat ? callback(new Error(`同级别部门下已经存在这个${value}的部门了`)) : callback() // 有返回什么 没有返回什么
     }
     const checkCodeRepeat = async(rule, value, callback) => { // 检查编码重复
       const { depts } = await getDepartments() // 先要获取最新的阻止架构数据
-      const isRepeat = depts.some(item => item.code === value && value) // 这里加一个 value 不为空，因为我们的部门有可能没有 code
+      let isRepeat = false
+      if (this.formData.id) {
+        // 有 id 就是编辑模式
+        // 要求是不能有一样的 code
+        isRepeat = depts.filter(item => item.id !== this.treeNode.id).some(item => item.code === value && value) // 这里加一个 value 不为空，因为我们的部门有可能没有 code
+      } else {
+        // 没有 id 就是新增模式
+        isRepeat = depts.some(item => item.code === value && value) // 这里加一个 value 不为空，因为我们的部门有可能没有 code
+      }
       isRepeat ? callback(new Error(`阻止架构中已经有部门使用${value}编码`)) : callback()
     }
     return {
