@@ -19,7 +19,8 @@
       <!-- /组织架构内容 -->
     </div>
     <!-- 放置新增弹层组件 -->
-    <add-dept :show-dialog="showDialog" :tree-node="node" @addDepts="getDepartments" />
+    <!-- <add-dept :show-dialog="showDialog" :tree-node="node" @changeDialog="test" @addDepts="getDepartments" /> -->
+    <add-dept :show-dialog.sync="showDialog" :tree-node="node" @changeDialog="test" @addDepts="getDepartments" />
     <!-- /放置新增弹层组件 -->
   </div>
 </template>
@@ -59,6 +60,9 @@ export default {
     addDepts(node) {
       this.showDialog = true // 显示弹层
       this.node = node
+    },
+    test(value) {
+      this.showDialog = value
     }
   }
 }
