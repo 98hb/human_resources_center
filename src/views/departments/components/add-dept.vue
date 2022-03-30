@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <!-- 放置弹层组件 -->
-  <el-dialog title="新增部门" :visible="true">
+  <el-dialog title="新增部门" :visible="showDialog">
     <!-- 表单数据 label-width 设置标题的宽度 -->
     <el-form label-width="120px">
       <el-form-item label="部门名称">
@@ -40,7 +40,12 @@ export default {
   components: {},
   // props可以用数组来接收数据 也可以用对象来接收
   // props: {   props属性: {  配置选项 }  }
-  props: {},
+  props: {
+    showDialog: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     // 这里存放数据
     return {
