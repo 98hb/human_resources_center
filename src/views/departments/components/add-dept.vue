@@ -33,7 +33,7 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-
+import { getDepartments } from '@/api/departments'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -44,10 +44,27 @@ export default {
     showDialog: {
       type: Boolean,
       default: false
+    },
+    treeNode: {
+      type: Object,
+      default: null
     }
   },
   data() {
     // 这里存放数据
+    const checkNameRepeat = async(rule, value, callback) => { // 检查部门名称是否重复
+      // value 是部门名称，要去和统计部门下的部门去比较，有没有相同的，
+      // 有相同的不能过去(统计部门不能有重复的名字)
+      // 不相同就可以过去
+      const { depts } = await getDepartments() // 去找统计部门下，有没有和 value 相同的数据 // 找到所有同级部门的子部门
+      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value) // 如果 isRepeat 为 true 表示找到一样的名字
+      isRepeat ? callback(new Error(`同级别部门下已经存在这个${value}的部门了`)) : callback() // 有返回什么 没有返回什么
+    }
+    const checkCodeRepeat = async(rule, value, callback) => { // 检查编码重复
+      const { depts } = await getDepartments() // 先要获取最新的阻止架构数据
+      const isRepeat = depts.some(item => item.code === value && value) // 这里加一个 value 不为空，因为我们的部门有可能没有 code
+      isRepeat ? callback(new Error(`阻止架构中已经有部门使用${value}编码`)) : callback()
+    }
     return {
       formData: { // 定义一个表单数据
         name: '',
@@ -57,9 +74,15 @@ export default {
       },
       rules: { // 校验规则 {key: 数组}
         name: [{ required: true, message: '部门名称不能为空', trigger: 'blur' },
-          { min: 1, max: 50, message: '部门名称长度为1-50个字符', trigger: 'blur' }],
+          { min: 1, max: 50, message: '部门名称长度为1-50个字符', trigger: 'blur' },
+          { trigger: 'blur',
+            validator: checkNameRepeat
+          }],
         code: [{ required: true, message: '部门编码不能为空', trigger: 'blur' },
-          { min: 1, max: 50, message: '部门编码长度为1-50个字符', trigger: 'blur' }],
+          { min: 1, max: 50, message: '部门编码长度为1-50个字符', trigger: 'blur' },
+          { trigger: 'blur',
+            validator: checkCodeRepeat
+          }],
         manager: [{ required: true, message: '部门负责人不能为空', trigger: 'blur' }],
         introduce: [{ required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { min: 1, max: 300, message: '部门介绍长度为1-300个字符', trigger: 'blur' }]

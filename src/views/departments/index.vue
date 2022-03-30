@@ -19,7 +19,7 @@
       <!-- /组织架构内容 -->
     </div>
     <!-- 放置新增弹层组件 -->
-    <add-dept :show-dialog="showDialog" />
+    <add-dept :show-dialog="showDialog" :tree-node="node" />
     <!-- /放置新增弹层组件 -->
   </div>
 </template>
