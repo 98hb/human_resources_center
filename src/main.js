@@ -11,6 +11,7 @@ import '@/styles/index.scss' // global css 全局样式
 import App from './App'
 import store from './store'
 import router from './router'
+import Components from '@/components'
 
 import * as directives from '@/directives'
 import '@/icons' // icon
@@ -24,6 +25,8 @@ Vue.use(ElementUI, { locale })
 Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key]) // 注册自定义指令
 })
+// 注册自定义组件
+Vue.use(Components)
 Vue.config.productionTip = false
 
 new Vue({
