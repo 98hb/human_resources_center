@@ -65,7 +65,7 @@
     </div>
     <!-- 放置一个弹层组件 -->
     <el-dialog title="编辑部门" :visible="showDialog">
-      <el-form :model="roleForm" :rules="rules" label-width="120px">
+      <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
         <el-form-item prop="name" label="角色名称">
           <el-input v-model="roleForm.name" />
         </el-form-item>
@@ -76,8 +76,8 @@
       <!-- 放置 footer 插槽 -->
       <el-row type="flex" justify="center">
         <el-col :span="8">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOK">确定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -85,8 +85,8 @@
 </template>
 
 <script>
-// getRoleList 获取角色的列表，getCompanyInfo 获取企业的信息，deleteRole 删除角色
-import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
+// getRoleList 获取角色的列表，getCompanyInfo 获取企业的信息，deleteRole 删除角色，getRoleDetail 读取角色详情，updateRole 更新角色详情
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -145,8 +145,36 @@ export default {
         console.log(error)
       }
     },
-    editRole(id) {
+    async editRole(id) {
+      this.roleForm = await getRoleDetail(id) // 实现数据的回写
       this.showDialog = true // 显示弹层
+    },
+    async btnOK() {
+      try {
+        // 1
+        // alert('测试点击事件')
+        await this.$refs.roleForm.validate()
+        // 只有校验通过的情况下，才会执行 await 的下方内容
+        // alert(123)
+        // roleForm 这个对象有 id 就是编辑，没有 id 就是新增
+        if (this.roleForm.id) {
+          await updateRole(this.roleForm)
+        } else {
+          // 新增业务
+        }
+        await updateRole(this.roleForm)
+        // 重新拉去数据
+        this.getRoleList()
+        this.$message.success('操作成功')
+        this.showDialog = false
+      } catch (error) {
+        // alert('校验规则失败')
+        console.log(error)
+      }
+    },
+    btnCancel() {
+      // 1
+      // alert('测试点击事件')
     }
   }
 }
