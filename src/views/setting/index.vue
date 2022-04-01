@@ -7,7 +7,7 @@
           <el-tab-pane label="角色管理">
             <!-- 左侧内容 -->
             <el-row style="height: 60px">
-              <el-button type="primary" icon="el-icon-plus" size="small">新增角色</el-button>
+              <el-button type="primary" icon="el-icon-plus" size="small" @click="showDialog = true">新增角色</el-button>
             </el-row>
             <!-- 给表格绑定数据 -->
             <el-table border="" :data="list">
@@ -64,7 +64,8 @@
       </el-card>
     </div>
     <!-- 放置一个弹层组件 -->
-    <el-dialog title="编辑部门" :visible="showDialog">
+    <!-- close 事件 再点击确定的时候会触发 -->
+    <el-dialog title="编辑部门" :visible="showDialog" @close="btnCancel">
       <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
         <el-form-item prop="name" label="角色名称">
           <el-input v-model="roleForm.name" />
@@ -85,8 +86,8 @@
 </template>
 
 <script>
-// getRoleList 获取角色的列表，getCompanyInfo 获取企业的信息，deleteRole 删除角色，getRoleDetail 读取角色详情，updateRole 更新角色详情
-import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
+// getRoleList 获取角色的列表，getCompanyInfo 获取企业的信息，deleteRole 删除角色，getRoleDetail 读取角色详情，updateRole 更新角色详情, addRole 新增角色
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -161,12 +162,12 @@ export default {
           await updateRole(this.roleForm)
         } else {
           // 新增业务
+          await addRole(this.roleForm)
         }
-        await updateRole(this.roleForm)
         // 重新拉去数据
         this.getRoleList()
         this.$message.success('操作成功')
-        this.showDialog = false
+        this.showDialog = false // 关闭弹层 => 触发 el-dialog 的事件
       } catch (error) {
         // alert('校验规则失败')
         console.log(error)
@@ -175,6 +176,14 @@ export default {
     btnCancel() {
       // 1
       // alert('测试点击事件')
+      console.log('触发关闭事件')
+      this.roleForm = {
+        name: '',
+        description: ''
+      }
+      // 移出校验
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
     }
   }
 }
