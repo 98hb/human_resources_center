@@ -61,6 +61,8 @@
         />
       </el-row>
     </div>
+    <!-- 放置组件弹层 -->
+    <add-employee />
   </div>
 </template>
 
@@ -68,7 +70,9 @@
 // getEmployeeList 获取员工综合列表，delEmployee 删除员工的请求接口
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
+import AddEmployee from './components/add-employee.vue'
 export default {
+  components: { AddEmployee },
   data() {
     return {
       list: [], // 接收数组
