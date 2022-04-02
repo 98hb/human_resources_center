@@ -21,8 +21,22 @@
         <el-table-column label="工号" sortable="" prop="workNumber" />
         <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formatEmployment" />
         <el-table-column label="部门" sortable="" prop="departmentName" />
-        <el-table-column label="入职时间" sortable="" prop="timeOfEntry" />
-        <el-table-column label="账户状态" sortable="" prop="enableState" />
+        <!-- 作用域插槽来做 ＋ 过滤器 -->
+        <el-table-column label="入职时间" sortable="" prop="timeOfEntry">
+          <!-- <template slot-scope="obj"></template> -->
+          <!-- <template v-slot="obj">
+            {{ obj.row.timeOfEntry }}
+          </template> -->
+          <!-- 将时间进行格式化 -->
+          <template v-slot="{ row }">
+            {{ row.timeOfEntry | formatDate }}
+          </template>
+        </el-table-column>
+        <el-table-column label="账户状态" sortable="" prop="enableState">
+          <template v-slot="{ row }">
+            <el-switch :value="row.enableState === 1" />
+          </template>
+        </el-table-column>
         <el-table-column label="操作" sortable="" fixed="right" width="280">
           <template>
             <el-button type="text" size="small">查看</el-button>
