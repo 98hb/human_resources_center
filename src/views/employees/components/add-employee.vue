@@ -62,7 +62,7 @@ export default {
   },
   // 监听属性 类似于data概念
   computed: {},
-  // 监控data中的数据变化
+  // 监控data中的数据变化.
   watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
