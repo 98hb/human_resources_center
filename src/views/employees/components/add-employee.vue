@@ -13,7 +13,9 @@
         <el-date-picker v-model="formData.timeOfEntry" style="width:50%" placeholder="请选择入职时间" />
       </el-form-item>
       <el-form-item label="聘用形式" prop="formOfEmployment">
-        <el-select v-model="formData.formOfEmployment" style="width:50%" placeholder="请选择" />
+        <el-select v-model="formData.formOfEmployment" style="width:50%" placeholder="请选择">
+          <el-option v-for="item in EmployeeEnum.hireType" :key="item.id" :label="item.value" :value="item.id" />
+        </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input v-model="formData.workNumber" style="width:50%" placeholder="请输入工号" />
@@ -21,7 +23,7 @@
       <el-form-item label="部门" prop="departmentName">
         <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" />
         <!-- 放置一个树形组件 -->
-        <el-tree v-if="showTree" v-loading="loading" :data="treeData" :props="{ label: 'name' }" :default-expand-all="true" />
+        <el-tree v-if="showTree" v-loading="loading" :data="treeData" :props="{ label: 'name' }" :default-expand-all="true" @node-click="selectNode" />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker v-model="formData.correctionTime" style="width:50%" placeholder="请选择转正时间" />
@@ -45,6 +47,7 @@
 // 例如：import 《组件名称》 from '《组件路径》';
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
+import EmployeeEnum from '@/api/constant/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -61,6 +64,7 @@ export default {
     // 这里存放数据
     return {
       // 定义表单数据
+      EmployeeEnum,
       formData: {
         username: '',
         mobile: '',
@@ -112,6 +116,11 @@ export default {
       const { depts } = await getDepartments() // depts 是一个数组，它需要转化成树形结构，才可以被 el-tree 显示
       this.treeData = tranListToTreeData(depts, '')
       this.loading = false
+    },
+    selectNode(node) {
+      // console.log(arguments)
+      this.formData.departmentName = node.name
+      this.showTree = false
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
