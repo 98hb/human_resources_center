@@ -19,7 +19,9 @@
         <el-input v-model="formData.workNumber" style="width:50%" placeholder="请输入工号" />
       </el-form-item>
       <el-form-item label="部门" prop="departmentName">
-        <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" />
+        <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" />
+        <!-- 放置一个树形组件 -->
+        <el-tree v-if="showTree" v-loading="loading" :data="treeData" :props="{ label: 'name' }" :default-expand-all="true" />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker v-model="formData.correctionTime" style="width:50%" placeholder="请选择转正时间" />
@@ -41,7 +43,8 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -76,7 +79,10 @@ export default {
         departmentName: [{ required: true, message: '部门不能为空', trigger: 'change' }], // 这里为什么要设置它为 change 呢
         timeOfEntry: [{ required: true, message: '入职时间', trigger: 'blur' }],
         correctionTime: ''
-      }
+      },
+      treeData: [], // 定义一个数组来接收树形结构
+      showTree: false, // 默认不显示树形组件
+      loading: false // 加上一进度条
     }
   },
   // 监听属性 类似于data概念
@@ -100,7 +106,13 @@ export default {
   activated() {},
   // 方法集合
   methods: {
-
+    async getDepartments() {
+      this.showTree = true
+      this.loading = true
+      const { depts } = await getDepartments() // depts 是一个数组，它需要转化成树形结构，才可以被 el-tree 显示
+      this.treeData = tranListToTreeData(depts, '')
+      this.loading = false
+    }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
