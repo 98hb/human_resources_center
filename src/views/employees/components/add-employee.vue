@@ -1,8 +1,8 @@
 <!--  -->
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="addEmployee" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="姓名" prop="username">
         <el-input v-model="formData.username" style="width:50%" placeholder="请输入姓名" />
       </el-form-item>
@@ -34,8 +34,8 @@
       <!-- <el-row slot="footer" type="flex" justify="center"> -->
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOK">确定</el-button>
         </el-col>
       </el-row>
     </template>
@@ -48,6 +48,7 @@
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
 import EmployeeEnum from '@/api/constant/employees'
+import { addEmployee } from '@/api/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -121,6 +122,36 @@ export default {
       // console.log(arguments)
       this.formData.departmentName = node.name
       this.showTree = false
+    },
+    async btnOK() {
+      // 校验表单
+      try {
+        await this.$refs.addEmployee.validate()
+        // 校验成功
+        await addEmployee(this.formData) // 调用新增接口
+        // 通知父组件，更新数据
+        this.$parent.getEmployeeList && this.$parent.getEmployeeList() // 父组件的实例 // 直接调用父组件的更新方法：获取员工综合列表
+        this.$parent.showDialog = false
+        // 这里不用重置数据，因为关闭弹窗触发了 close 事件，close 事件绑定了 btnCancel 方法
+        // console.log(this.$parent)
+      } catch (error) {
+        console.log(error)
+      }
+      this.$refs.addEmployee.validate()
+    },
+    btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.addEmployee.resetFields() // 移出之前的校验
+      this.$emit('update:showDialog', false)
+      // update: prop 名称，这么写的话，可以在父组件，直接用 sync 修饰符处理
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
