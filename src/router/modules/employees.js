@@ -14,5 +14,12 @@ export default {
       title: '员工管理', // 这里为什么要用 title ，因为左侧导航读取了这里的 title 属性。
       icon: 'people'
     }
+  },
+  {
+    path: 'detail/:id', // /employeess/detail/123 123是id，/employeess/detail 需要＋ ?有无 id 都可以进入
+    component: () => import('@/views/employees/detail'),
+    meta: '员工详情',
+    hidden: true // 表示该内容不在左侧菜单显示
+
   }]
 }
