@@ -6,7 +6,7 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-
+import { importEmployee } from '@/api/employees'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -41,8 +41,46 @@ export default {
   activated() {},
   // 方法集合
   methods: {
-    success({ header, results }) {
+    async success({ header, results }) {
       // debugger
+      // header，results 中的数据是中文
+      // 新增的员工的属性是一致的
+      // username: '', 姓名
+      // mobile: '', 手机号
+      // formOfEmployment: '',
+      // workNumber: '', 工号
+      // departmentName: '',
+      // timeOfEntry: '', 入职日期
+      // correctionTime: '' 转正日期
+      // debugger
+      const userRelations = {
+        '入职日期': 'timeOfEntry',
+        '手机号': 'mobile',
+        '姓名': 'username',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber'
+      }
+      // var arr = []
+      // results.forEach(item => {
+      //   Object.keys(item).forEach(key => {
+      //     var userInfo = {}
+      //     // 现在 key 是中文
+      //     userInfo[userRelations[key]] = item[key] // 将原来中文对应的值赋值给原来英文对应的值
+      //   })
+      //   arr.push(userInfo)
+      //   // console.log(Object.keys(item))
+      // })
+      var newArr = results.map(item => {
+        var userInfo = {}
+        Object.keys(item).forEach(key => {
+          userInfo[userRelations[key]] = item[key] // 将原来中文对应的值赋值给原来英文对应的值
+        })
+        return userInfo
+      })
+      // console.log(newArr)
+      await importEmployee(newArr) // 接收一个数组
+      this.$message.success('导入 excel 成功')
+      this.$router.back() // 回到上一个页面
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
