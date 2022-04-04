@@ -10,7 +10,7 @@
         <!-- 右侧显示按钮，excel 导入 excel 导出 新增员工 -->
         <template v-slot:after>
           <el-button size="small" type="success" @click="$router.push('/import')">excel导入</el-button>
-          <el-button size="small" type="danger">excel导出</el-button>
+          <el-button size="small" type="danger" @click="exportData">excel导出</el-button>
           <el-button size="small" type="primary" @click="showDialog = true">新增员工</el-button>
         </template>
       </page-tools>
@@ -118,6 +118,22 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    exportData() {
+      // 导出 excel
+      import('@/vendor/Export2Excel').then(excel => {
+        // excel 是引入文件的导出对象
+        excel.export_json_to_excel({
+          header: ['姓名', '工资'],
+          data: [['张三', 30000], ['张三', 30000]],
+          filename: '员工工资表',
+          // bookType: 'txt'
+          bookType: 'xlsx'
+        })
+        // [{ username: '张三' , mobile: 18511111111 }] => [[]]
+        // 要转换数据结构，还要和表头的顺序对应上
+        // 要求转出的标题是中文
+      })
     }
   }
 }
