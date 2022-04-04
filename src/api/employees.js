@@ -35,3 +35,13 @@ export function addEmployee(data) {
     data
   })
 }
+/**
+ * 封装一个导入员工的接口
+ */
+export function importEmployee(data) {
+  return request({
+    method: 'post',
+    url: '/sys/user/batch',
+    data
+  })
+}

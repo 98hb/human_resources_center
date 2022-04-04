@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <upload-excel />
+  <upload-excel :on-success="success" />
 </template>
 
 <script>
@@ -41,7 +41,9 @@ export default {
   activated() {},
   // 方法集合
   methods: {
-
+    success({ header, results }) {
+      // debugger
+    }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
