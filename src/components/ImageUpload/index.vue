@@ -3,7 +3,14 @@
   <div>
     <!-- 给 action 一个 # 就不会报错 -->
     <!-- file-list 是上传的文件列表，可以绑定到上传组件上，让上传组件来显示 -->
-    <el-upload list-type="picture-card" :limit="1" action="#" :on-preview="preview" :file-list="fileList">
+    <el-upload
+      list-type="picture-card"
+      :limit="1"
+      action="#"
+      :on-preview="preview"
+      :file-list="fileList"
+      :class="{ disabled : fileComputed }"
+    >
       <i class="el-icon-plus" />
     </el-upload>
     <el-dialog :visible.sync="showDialog" title="图片预览">
@@ -32,7 +39,12 @@ export default {
     }
   },
   // 监听属性 类似于data概念
-  computed: {},
+  computed: {
+    // 如果它为 true 表示就不该显示 + 号
+    fileComputed() {
+      return this.fileList.length === 1
+    }
+  },
   // 监控data中的数据变化
   watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
@@ -62,5 +74,7 @@ export default {
 }
 </script>
 <style scoped>
-
+  .disabled .el-upload--picture-card {
+  display: none
+}
 </style>
