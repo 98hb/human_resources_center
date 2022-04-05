@@ -19,6 +19,12 @@
           </el-tab-pane>
           <el-tab-pane label="个人详情">
             <!-- 放置内容 -->
+            <!--             <user-info />
+ -->            <!-- vuejs 中内置了一个组件 component可以是任何组件 -->
+            <!-- <el-button type="primary" @click="UserComponent = 'el-button'">切换组件</el-button>
+            <el-button type="primary" @click="UserComponent = 'user-info'">切换组件1</el-button> -->
+            <component :is="UserComponent" />
+            <!-- 动态组件 可以切换组件 is 必须是变量 -->
           </el-tab-pane>
           <el-tab-pane label="岗位信息">
             <!-- 放置内容 -->
@@ -34,16 +40,20 @@
 // 例如：import 《组件名称》 from '《组件路径》';
 import { getUserDetailById } from '@/api/user' // 根据用户 id 获取用户的详情
 import { saveUserDetailById } from '@/api/employees' // 保存员工的基本信息
+import UserInfo from './components/user-info.vue'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
-  components: {},
+  components: {
+    UserInfo
+  },
   // props可以用数组来接收数据 也可以用对象来接收
   // props: {   props属性: {  配置选项 }  }
   props: {},
   data() {
     // 这里存放数据
     return {
+      UserComponent: 'UserInfo',
       userId: this.$route.params.id, // 直接将路由中的参数赋值给 data 中的属性
       userInfo: {
         username: '',
