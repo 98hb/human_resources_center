@@ -28,6 +28,8 @@
           </el-tab-pane>
           <el-tab-pane label="岗位信息">
             <!-- 放置内容 -->
+            <component :is="JobrComponent" />
+            <!-- <job-info /> -->
           </el-tab-pane>
         </el-tabs>
       </el-card>
@@ -41,11 +43,12 @@
 import { getUserDetailById } from '@/api/user' // 根据用户 id 获取用户的详情
 import { saveUserDetailById } from '@/api/employees' // 保存员工的基本信息
 import UserInfo from './components/user-info.vue'
+import JobInfo from './components/job-info.vue'
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
   components: {
-    UserInfo
+    UserInfo, JobInfo
   },
   // props可以用数组来接收数据 也可以用对象来接收
   // props: {   props属性: {  配置选项 }  }
@@ -53,7 +56,8 @@ export default {
   data() {
     // 这里存放数据
     return {
-      UserComponent: 'UserInfo',
+      UserComponent: 'user-info',
+      JobrComponent: 'job-info',
       userId: this.$route.params.id, // 直接将路由中的参数赋值给 data 中的属性
       userInfo: {
         username: '',
