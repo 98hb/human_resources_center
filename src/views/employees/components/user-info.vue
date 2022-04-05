@@ -38,7 +38,7 @@
       <el-row class="inline-info">
         <el-col :span="12">
           <el-form-item label="手机">
-            <el-input v-model="userInfo.mobile" />
+            <el-input v-model="userInfo.mobile" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -286,6 +286,8 @@
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
 import EmployeeEnum from '@/api/constant/employees' // 引入枚举
+import { getUserDetailById } from '@/api/user' // 根据用户 id 获取用户的详情
+import { getPersonalDetail, saveUserDetailById, updatePersonal } from '@/api/employees' // 读取用户详情的基础信息,保存员工的基本信息,更新用户详情的基础信息
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -370,7 +372,8 @@ export default {
   watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
-
+    this.getUserDetailById()
+    this.getPersonalDetail()
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
@@ -385,7 +388,20 @@ export default {
   activated() {},
   // 方法集合
   methods: {
-
+    async getUserDetailById() {
+      this.userInfo = await getUserDetailById(this.userId)
+    },
+    async getPersonalDetail() {
+      this.formData = await getPersonalDetail(this.userId) // 获取员工数据
+    },
+    async saveUser() {
+      await saveUserDetailById(this.userInfo)
+      this.$message.success('保存用户基本信息成功')
+    },
+    async savePersonal() {
+      await updatePersonal(this.formData)
+      this.$message.success('保存用户基础信息成功')
+    }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
