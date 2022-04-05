@@ -163,6 +163,7 @@
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
 import EmployeeEnum from '@/api/constant/employees' // 引入枚举
+import { getJobDetail, getEmployessSimple, updateJob } from '@/api/employees' // 获取用户的岗位信息,获取员工的简单列表,保存岗位信息
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -212,7 +213,8 @@ export default {
   watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
-
+    this.getJobDetail()
+    this.getEmployessSimple()
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
@@ -227,7 +229,16 @@ export default {
   activated() {},
   // 方法集合
   methods: {
-
+    async getJobDetail() {
+      this.formData = await getJobDetail(this.userId)
+    },
+    async getEmployessSimple() {
+      this.depts = await getEmployessSimple()
+    },
+    async saveJob() {
+      await updateJob(this.formData)
+      this.$message.success('保存岗位信息成功')
+    }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
