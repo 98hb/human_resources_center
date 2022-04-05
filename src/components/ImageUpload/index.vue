@@ -11,6 +11,7 @@
       :on-preview="preview"
       :on-remove="handleRemove"
       :on-change="changeFile"
+      :before-upload="beforeUpload"
       :file-list="fileList"
       :class="{ disabled : fileComputed }"
     >
@@ -90,6 +91,24 @@ export default {
       // 这里为何暂时不成功讷？ 因为现在还没有上传，所以第二次进来的数据一定是个空的。
       // 如果完成上传动作了，第一次进入和第二次进入的 fileList 的长度应该都是1，应该都有数据
       // 上传成功 => 数据才能进来 => 腾讯云 cos
+    },
+    beforeUpload(file) {
+      console.log(file)
+      // 先检查文件类型
+      const types = ['image/jpeg', 'image/gif', 'image/bmp', 'image/png']
+      if (!types.some(item => item === file.type)) {
+        // 如果不存在
+        this.$message.error('上传图片只能是 JPG、GIF、BMP、PNG 格式!')
+        return false // 上传 终止
+      }
+      // 检查文件大小 5M 1M = 1024KB 1KB = 1024B
+      const maxSize = 5 * 1024 * 1024
+      if (file.size > maxSize) {
+        // 超过了限制的文件大小
+        this.$message.error('上传的图片大小不能大于5M')
+        return false
+      }
+      return true
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
