@@ -3,7 +3,7 @@
     <div class="dashboard-text">name: {{ name }}</div>
     <!-- <upload-excel /> -->
     <!-- <UploadExcel></UploadExcel> -->
-    <image-upload />
+    <!-- <image-upload /> -->
   </div>
 </template>
 
