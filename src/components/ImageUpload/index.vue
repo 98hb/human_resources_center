@@ -14,6 +14,7 @@
       :before-upload="beforeUpload"
       :file-list="fileList"
       :class="{ disabled : fileComputed }"
+      :http-request="upload"
     >
       <i class="el-icon-plus" />
     </el-upload>
@@ -26,7 +27,11 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-
+import COS from 'cos-js-sdk-v5' // 引入腾讯云 cos 包
+const cos = new COS({
+  SecretId: 'AKIDtZ0A3f04sPedLmwqTpuhEUS9ajbCXbOu', // 身份验证 ID
+  SecretKey: 'GGzQcYDagW4LK2TeZCZfT0HHzQZS4PTH' // 身份密钥
+})
 export default {
 // import引入的组件需要注入到对象中才能使用
   name: '',
@@ -93,7 +98,7 @@ export default {
       // 上传成功 => 数据才能进来 => 腾讯云 cos
     },
     beforeUpload(file) {
-      console.log(file)
+    //   console.log(file)
       // 先检查文件类型
       const types = ['image/jpeg', 'image/gif', 'image/bmp', 'image/png']
       if (!types.some(item => item === file.type)) {
@@ -109,6 +114,23 @@ export default {
         return false
       }
       return true
+    },
+    // 进行上传操作
+    upload(params) {
+      // console.log(params.file)
+      if (params.file) {
+        // 执行上传操作
+        cos.putObject({
+          Bucket: 'a1img-1304461986', /* 填入您自己的存储桶，必须字段 */
+          Region: 'ap-beijing', /* 存储桶所在地域，例如ap-beijing，必须字段 */
+          Key: params.file.name, /* 存储在桶里的对象键（例如1.jpg，a/b/test.txt），必须字段 */
+          Body: params.file, // 要上传的文件对象
+          StorageClass: 'STANDARD' // 上传的模式类型，直接默认标准模式即可
+        }, function(err, data) {
+          // data 返回数据之后，应该如何处理
+          console.log(err || data)
+        })
+      }
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
 }
