@@ -42,9 +42,10 @@ export default {
   data() {
     // 这里存放数据
     return {
-      fileList: [{ url: 'https://t7.baidu.com/it/u=3676218341,3686214618&fm=193&f=GIF' }],
+      fileList: [],
       showDialog: false,
-      imgUrl: ''
+      imgUrl: '',
+      currentFileUid: null // 记录当前正在上传的 uid
     }
   },
   // 监听属性 类似于data概念
@@ -91,7 +92,7 @@ export default {
     // 不能用 push 这个钩子会执行多次
     changeFile(file, fileList) {
     //   console.log(file)
-    //   console.log(fileList)
+      // console.log(fileList.length)
       this.fileList = fileList.map(item => item)
       // 这里为何暂时不成功讷？ 因为现在还没有上传，所以第二次进来的数据一定是个空的。
       // 如果完成上传动作了，第一次进入和第二次进入的 fileList 的长度应该都是1，应该都有数据
@@ -113,6 +114,9 @@ export default {
         this.$message.error('上传的图片大小不能大于5M')
         return false
       }
+      // 已经确定当前上传的就是当前的这个 file 了
+      // console.log(file)
+      this.currentFileUid = file.uid
       return true
     },
     // 进行上传操作
@@ -126,9 +130,27 @@ export default {
           Key: params.file.name, /* 存储在桶里的对象键（例如1.jpg，a/b/test.txt），必须字段 */
           Body: params.file, // 要上传的文件对象
           StorageClass: 'STANDARD' // 上传的模式类型，直接默认标准模式即可
-        }, function(err, data) {
+        }, (err, data) => {
           // data 返回数据之后，应该如何处理
           console.log(err || data)
+          // data 中有一个 statusCode === 200 的时候说明上传成功
+          if (!err && data.statusCode === 200) {
+            // 此时说明文件上传成功，要获取成功的返回地址
+            // fileList 才能显示到上传组件上，此时我们要将 fileList 中的数据的url地址变成现在上传成功的地址
+            // 目前虽然是一张图片，但是请注意，我们的 fileList 是一个数组
+            // 需要知道当前上传成功的是哪一张图片
+            this.fileList = this.fileList.map(item => {
+              // 去找谁的 uid 等于刚刚记录下来的 id
+              if (item.uid === this.currentFileUid) {
+                // 将成功的地址赋值给原来的 url 属性
+                return { url: 'http://' + data.Location, upload: true }
+                // upload 为 true 表示这张图片已经上传完毕，这个属性要为我们后期应用的时候做标记
+                // 保存 => 图片有大有小 => 上传速度有快有慢 =>要根据有没有 upload 这个标记来决定是否去保存
+              }
+              return item
+            })
+            // 将上传成功的地址，回写到了 fileList 中，fileList 变化 => upload 组件就会根据 fileList 的变化而去渲染视图
+          }
         })
       }
     }
