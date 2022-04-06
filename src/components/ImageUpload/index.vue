@@ -18,6 +18,7 @@
     >
       <i class="el-icon-plus" />
     </el-upload>
+    <el-progress :percentage="percent" style="width:180px" />
     <el-dialog :visible.sync="showDialog" title="图片预览">
       <img :src="imgUrl" style="width:100%" alt="">
     </el-dialog>
@@ -45,7 +46,9 @@ export default {
       fileList: [],
       showDialog: false,
       imgUrl: '',
-      currentFileUid: null // 记录当前正在上传的 uid
+      currentFileUid: null, // 记录当前正在上传的 uid
+      percent: 0, // 记录当前的百分比
+      showPercent: false
     }
   },
   // 监听属性 类似于data概念
@@ -117,6 +120,7 @@ export default {
       // 已经确定当前上传的就是当前的这个 file 了
       // console.log(file)
       this.currentFileUid = file.uid
+      this.showPercent = true
       return true
     },
     // 进行上传操作
@@ -129,10 +133,14 @@ export default {
           Region: 'ap-beijing', /* 存储桶所在地域，例如ap-beijing，必须字段 */
           Key: params.file.name, /* 存储在桶里的对象键（例如1.jpg，a/b/test.txt），必须字段 */
           Body: params.file, // 要上传的文件对象
-          StorageClass: 'STANDARD' // 上传的模式类型，直接默认标准模式即可
+          StorageClass: 'STANDARD', // 上传的模式类型，直接默认标准模式即可
+          onProgress: (params) => {
+            // console.log(params)
+            this.percent = params.percent * 100
+          }
         }, (err, data) => {
           // data 返回数据之后，应该如何处理
-          console.log(err || data)
+          // console.log(err || data)
           // data 中有一个 statusCode === 200 的时候说明上传成功
           if (!err && data.statusCode === 200) {
             // 此时说明文件上传成功，要获取成功的返回地址
@@ -149,6 +157,12 @@ export default {
               }
               return item
             })
+            // 关闭进度条
+            // 重置百分比
+            setTimeout(() => {
+              this.showPercent = false
+              this.percent = 0
+            }, 1000)
             // 将上传成功的地址，回写到了 fileList 中，fileList 变化 => upload 组件就会根据 fileList 的变化而去渲染视图
           }
         })
