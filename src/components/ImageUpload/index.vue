@@ -11,7 +11,6 @@
       :on-preview="preview"
       :on-remove="handleRemove"
       :on-change="changeFile"
-      :before-upload="beforeUpload"
       :file-list="fileList"
       :class="{ disabled : fileComputed }"
       :http-request="upload"
