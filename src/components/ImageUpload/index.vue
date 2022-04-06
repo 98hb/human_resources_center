@@ -14,10 +14,11 @@
       :file-list="fileList"
       :class="{ disabled : fileComputed }"
       :http-request="upload"
+      :before-upload="beforeUpload"
     >
       <i class="el-icon-plus" />
     </el-upload>
-    <el-progress :percentage="percent" style="width:180px" />
+    <el-progress v-if="showPercent" :percentage="percent" style="width:180px" />
     <el-dialog :visible.sync="showDialog" title="图片预览">
       <img :src="imgUrl" style="width:100%" alt="">
     </el-dialog>
