@@ -401,7 +401,7 @@ export default {
     async getPersonalDetail() {
       this.formData = await getPersonalDetail(this.userId) // 获取员工数据
       if (this.formData.staffPhoto) {
-        this.$refs.mystaffPhoto.fileList = [{ url: this.formData.staffPhoto, upload: true}]
+        this.$refs.mystaffPhoto.fileList = [{ url: this.formData.staffPhoto, upload: true }]
       }
     },
     async saveUser() {
