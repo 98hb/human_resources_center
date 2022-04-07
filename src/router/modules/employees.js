@@ -21,5 +21,13 @@ export default {
     meta: '员工详情',
     hidden: true // 表示该内容不在左侧菜单显示
 
+  },
+  {
+    path: 'print/:id',
+    component: () => import('@/views/employees/print'),
+    hidden: true,
+    meta: {
+      title: '员工打印'
+    }
   }]
 }
